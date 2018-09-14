@@ -271,3 +271,23 @@ def get_slices_idx_ext(A, n_slices, idx_of_interest):
          IDX[i] = idx_of_interest[np.where(np.logical_and(A[idx_of_interest,0] >= bin_min_max[0][i], A[idx_of_interest,0] < bin_min_max[1][i]))[0]]
 
         return(IDX)
+
+def get_onset(E, DOS, a):
+	import numpy as np
+#onset of the distribution. Define the E_onset: \int_E[0]^E[i_onset](DOS) = int_-inf^inf DOS * a
+#1 array of args
+#2 array of fun values
+# onset value a<~1
+#DOS(E) vector to find an upper limit
+	N		=	len(DOS)
+	total_sum       =       np.sum(DOS)
+	partial_sums    =       np.zeros(N, dtype = np.float)	
+	for i in range(0, N):
+        	partial_sums[i]         =       np.sum(DOS[0:i])
+	partial_sums /= total_sum#normalization
+	idx = np.argmin(np.abs(partial_sums - a))
+#	print('who is closer to a = %f'%a, np.abs(partial_sums-a))
+#	print('idx', idx)
+#	print('E[idx]', E[idx])
+	return E[idx]
+
