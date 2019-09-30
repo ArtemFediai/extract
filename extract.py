@@ -303,7 +303,7 @@ def get_onset(E, DOS, a):
     return E[idx]
 
 
-def num_fs(pattern):
+def num_fs_simple(pattern):
     """
     :param pattern: start pattern of the folders. Example: 'dop_'
     :return: number of the elements that meet the pattern
@@ -317,3 +317,31 @@ def num_fs(pattern):
         if item[0:len_p] == pattern:
             count += 1
     return count
+
+
+def num_fs(patterns):
+    """
+    :param patterns: patterns of the folders (starting letters i.e. "dop_"). Type: array of strings
+    :return: number of the elements that meet the pattern
+    """
+    import os
+    import numpy as np
+
+    c = np.zeros(len(patterns), dtype= np.int)  # ini num of occurrences at each level
+    print(c)
+    current_dir = '.'
+
+    for i_l, level in enumerate(patterns):
+        all_dirs = os.listdir(current_dir)
+        print(all_dirs)
+        c[i_l] = 0  # count 1
+        pattern = patterns[i_l]
+        len_p = len(pattern)
+        print(len_p)
+        for i, item in enumerate(all_dirs):
+            if item[0:len_p] == pattern:
+                c[i_l] += 1
+        if i_l < len(patterns):
+            current_dir += '/{}0'.format(pattern)
+
+    return c
